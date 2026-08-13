@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>婚宴座位即時同步系統 | 即時資料庫版</title>
+    <title>婚宴座位即時同步系統 | 快速報到版</title>
     
     <!-- Google 字體 -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -54,7 +54,7 @@
     <script type="text/babel">
         const { useState, useEffect, useMemo } = React;
 
-        // Firebase 專屬設定 (已包含你的 Realtime Database 連結)
+        // Firebase 專屬設定
         const firebaseConfig = {
             apiKey: "AIzaSyCn8UCLijzEC6TSNAGOGM9DZv_idVZUdas",
             authDomain: "weddingapp-2ac1e.firebaseapp.com",
@@ -68,7 +68,6 @@
         const TABLE_CAPACITY = 10; 
         const WEDDING_ID = "wedding-2026-10-03";
 
-        // 初始化 Firebase
         let auth, rtdb;
         try {
             if (!firebase.apps.length) {
@@ -129,7 +128,6 @@
                 return () => unsubscribe();
             }, []);
 
-            // 監聽 Realtime Database 資料變動
             useEffect(() => {
                 if (!user || !rtdb) return;
                 const statusRef = rtdb.ref(`weddings/${WEDDING_ID}/status`);
@@ -237,7 +235,6 @@
                 return guests.map(guest => ({
                     ...guest,
                     checkedIn: dynamicData[guest.id]?.checkedIn || false,
-                    gotGift: dynamicData[guest.id]?.gotGift || false,
                 }));
             }, [guests, dynamicData]);
 
@@ -340,30 +337,22 @@
                                         {guest.note && <span className="inline-block mt-1.5 px-2 py-0.5 bg-slate-50 text-slate-400 text-[10px] rounded-full truncate max-w-full">{guest.note}</span>}
                                     </div>
                                     <div className="flex gap-2.5 flex-shrink-0">
+                                        <!-- 已移除喜餅按鈕，放大報到按鈕 -->
                                         <button onClick={() => toggleStatus(guest.id, 'checkedIn')}
-                                                className={`flex flex-col items-center justify-center w-14 h-[60px] rounded-2xl transition-all duration-300 ${
+                                                className={`flex items-center justify-center px-6 h-12 rounded-2xl transition-all duration-300 font-medium text-sm tracking-widest ${
                                                     guest.checkedIn 
-                                                    ? 'bg-wedding-green text-wedding-greenText shadow-inner scale-[0.97]' 
-                                                    : 'bg-slate-50 text-slate-300'
+                                                    ? 'bg-wedding-green text-wedding-greenText shadow-inner scale-[0.98]' 
+                                                    : 'bg-slate-100 text-slate-400 hover:bg-slate-200'
                                                 }`}>
-                                            <i className={`fa-solid fa-check text-lg ${guest.checkedIn ? '' : 'opacity-50'}`}></i>
-                                            <span className="text-[10px] mt-1.5 font-medium">{guest.checkedIn ? '已到' : '報到'}</span>
-                                        </button>
-                                        <button onClick={() => toggleStatus(guest.id, 'gotGift')}
-                                                className={`flex flex-col items-center justify-center w-14 h-[60px] rounded-2xl transition-all duration-300 ${
-                                                    guest.gotGift 
-                                                    ? 'bg-wedding-pink text-wedding-pinkText shadow-inner scale-[0.97]' 
-                                                    : 'bg-slate-50 text-slate-300'
-                                                }`}>
-                                            <i className={`fa-solid fa-gift text-base ${guest.gotGift ? '' : 'opacity-50'}`}></i>
-                                            <span className="text-[10px] mt-1.5 font-medium">{guest.gotGift ? '已領' : '喜餅'}</span>
+                                            <i className={`fa-solid fa-check mr-2 ${guest.checkedIn ? 'text-wedding-greenText' : 'opacity-40'}`}></i>
+                                            {guest.checkedIn ? '已報到' : '點選報到'}
                                         </button>
                                     </div>
                                 </div>
                             ))}
 
                             {Array.from({ length: emptySeatsCount }).map((_, index) => (
-                                <div key={`empty-${index}`} className="p-4 rounded-3xl border border-dashed border-slate-200 flex items-center justify-center h-[88px] text-slate-300 bg-transparent">
+                                <div key={`empty-${index}`} className="p-4 rounded-3xl border border-dashed border-slate-200 flex items-center justify-center h-[76px] text-slate-300 bg-transparent">
                                     <span className="font-light text-[13px] tracking-widest">+ 空位</span>
                                 </div>
                             ))}
@@ -495,4 +484,3 @@
     </script>
 </body>
 </html>
-
