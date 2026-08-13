@@ -495,23 +495,3 @@
     </script>
 </body>
 </html>
-```eof
-
----
-
-### 重要：設定 Realtime Database 的讀寫規則
-
-因為你使用的是 **Realtime Database**，除了前面開好的 **Anonymous (匿名登入)** 之外，還需要去資料庫裡面設定 **規則 (Rules)**，讓招待的手機能夠順利讀寫。
-
-請依照以下 3 個步驟設定規則：
-1. 回到 [Firebase Console](https://console.firebase.google.com/)。
-2. 在左側選單點擊 **Build (建構)** ➔ **Realtime Database**。
-3. 切換到上方的 **Rules (規則)** 頁籤，將原本的內容全部刪除，改貼上下面的 JSON 規則，然後點擊 **Publish (發布)**：
-
-```json
-{
-  "rules": {
-    ".read": true,
-    ".write": true
-  }
-}
